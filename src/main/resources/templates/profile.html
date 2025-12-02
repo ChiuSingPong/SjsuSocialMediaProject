@@ -232,6 +232,22 @@
             margin-top: 4px;
         }
 
+        .friend-avatar-lg {
+            width: 110px;
+            height: 110px;
+            border-radius: 18px;
+            object-fit: cover;
+            background: #f0f0f0;
+        }
+        .friend-card {
+            text-align: center;
+        }
+        .friend-card .friend-name {
+            font-size: 0.9rem;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
         .post-meta {
             font-size: 0.8rem;
             color: #6b7280;
@@ -276,7 +292,7 @@
 <header class="topbar">
     <!-- left: logo -->
     <div class="d-flex align-items-center me-3">
-        <div class="topbar-logo">f</div>
+        <div class="topbar-logo">S</div>
     </div>
 
     <!-- middle: search -->
@@ -296,9 +312,8 @@
         <a class="nav-link" href="#"><i class="bi bi-chat-left-dots"></i></a>
     </nav>
 
-    <!-- right: bell + profile -->
+    <!-- right: profile -->
     <div class="d-flex align-items-center gap-3 ms-auto">
-        <i class="bi bi-bell"></i>
         <a href="/profile">
             <img class="avatar-sm"
                  th:src="${currentProfile != null and currentProfile.profileImage != null
@@ -327,7 +342,6 @@
                            ? currentProfile.profileImage
                            : 'https://via.placeholder.com/200'}"
                  alt="Profile">
-
             <div class="mb-2">
                 <div class="profile-name" th:text="${currentUser.username}">Alex Martinez</div>
                 <div class="profile-friends-count">
@@ -335,7 +349,6 @@
                 </div>
             </div>
         </div>
-
         <button class="edit-profile-btn">
             <i class="bi bi-pencil me-1"></i> Edit Profile
         </button>
@@ -346,10 +359,6 @@
         <li class="nav-item">
             <button class="nav-link active" data-bs-toggle="tab"
                     data-bs-target="#tab-posts" type="button">Posts</button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link" data-bs-toggle="tab"
-                    data-bs-target="#tab-about" type="button">About</button>
         </li>
         <li class="nav-item">
             <button class="nav-link" data-bs-toggle="tab"
@@ -375,7 +384,6 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <h6 class="mb-0">Intro</h6>
-                                <i class="bi bi-pencil"></i>
                             </div>
 
                             <form method="post" action="/profile/intro">
@@ -397,14 +405,6 @@
                                     </button>
                                 </div>
                             </form>
-
-                            <!-- Hobbies / tags -->
-                            <div class="mt-3">
-                                <span class="tag-pill">SJSU CS</span>
-                                <span class="tag-pill">Hackathons</span>
-                                <span class="tag-pill">Basketball</span>
-                                <span class="tag-pill">Clubs & Events</span>
-                            </div>
                         </div>
                     </div>
 
@@ -467,7 +467,6 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <h6 class="mb-0">Photos</h6>
-                                <a href="#" class="small">See all photos</a>
                             </div>
                             <div class="row photos-grid">
                                 <div class="col-4"
@@ -489,16 +488,19 @@
                                         <span th:text="${#lists.size(friends)}">342</span> friends
                                     </small>
                                 </div>
-                                <a href="#" class="small">See all friends</a>
                             </div>
 
                             <div class="row">
                                 <div class="col-4 mb-3"
                                      th:each="friend, iter : ${friends}"
                                      th:if="${iter.index < 6}">
-                                    <img class="friend-avatar mb-1"
-                                         src="https://via.placeholder.com/100"
-                                         alt="Friend">
+                                    <img class="avatar-sm me-2"
+                                         th:src="${friend != null
+                                                  && friend.profile != null
+                                                  && friend.profile.profileImage != null
+                                                  ? friend.profile.profileImage
+                                                  : 'https://via.placeholder.com/80x80.png?text=U'}"
+                                         alt="friend">
                                     <div class="friend-name" th:text="${friend.username}">Sarah Johnson</div>
                                 </div>
                             </div>
@@ -509,32 +511,33 @@
             </div> <!-- row -->
         </div>
 
-        <!-- ABOUT / FRIENDS / PHOTOS TABS – placeholder content -->
-        <div class="tab-pane fade" id="tab-about">
-            <div class="card-soft">
-                <div class="card-body">
-                    <h6>About</h6>
-                    <p class="mb-0 small text-muted">
-                        You can expand this tab with detailed education, work, contact info, etc.,
-                        using the same DB fields as your settings page.
-                    </p>
-                </div>
-            </div>
-        </div>
-
+        <!-- FRIENDS / PHOTOS TABS – placeholder content -->
         <div class="tab-pane fade" id="tab-friends">
             <div class="card-soft">
                 <div class="card-body">
-                    <h6>Friends</h6>
+                    <h6 class="mb-3">Friends</h6>
+
                     <div class="row">
-                        <div class="col-6 col-md-4 mb-3"
+                        <div class="col-6 col-md-4 col-lg-3 mb-4 friend-card"
                              th:each="friend : ${friends}">
-                            <img class="friend-avatar mb-1"
-                                 src="https://via.placeholder.com/100"
+
+                            <!-- BIG FRIEND AVATAR -->
+                            <img class="friend-avatar-lg"
+                                 th:src="${friend != null
+                                  && friend.profile != null
+                                  && friend.profile.profileImage != null
+                                  ? friend.profile.profileImage
+                                  : 'https://via.placeholder.com/200?text=Friend'}"
                                  alt="Friend">
-                            <div class="friend-name" th:text="${friend.username}">Friend Name</div>
+
+                            <!-- FRIEND NAME -->
+                            <div class="friend-name"
+                                 th:text="${friend.username}">
+                                Friend Name
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

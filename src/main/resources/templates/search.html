@@ -77,7 +77,7 @@
 <!-- TOPBAR (same as home, with active search) -->
 <header class="topbar">
     <div class="d-flex align-items-center me-3">
-        <div class="topbar-logo">f</div>
+        <div class="topbar-logo">S</div>
     </div>
 
     <form class="topbar-search d-none d-md-flex" method="get" action="/search">
@@ -91,7 +91,6 @@
     </nav>
 
     <div class="d-flex align-items-center gap-3 ms-auto">
-        <i class="bi bi-bell"></i>
         <a href="/profile">
             <img class="avatar-sm"
                  th:src="${currentProfile != null && currentProfile.profileImage != null
@@ -116,7 +115,11 @@
 
         <div th:each="user : ${userResults}" class="d-flex align-items-center mb-2">
             <img class="avatar-sm me-2"
-                 src="https://via.placeholder.com/80x80.png?text=U" alt="user">
+                 th:src="${user.profile != null and user.profile.profileImage != null
+                         ? user.profile.profileImage
+                         : 'https://via.placeholder.com/80x80.png?text=U'}"
+                 alt="user">
+
 
             <div class="flex-grow-1">
                 <div th:text="${user.username}">User Name</div>

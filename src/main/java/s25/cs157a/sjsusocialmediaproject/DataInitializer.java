@@ -45,43 +45,37 @@ public class DataInitializer implements CommandLineRunner {
         alex.setUsername("alexmartinez");
         alex.setEmail("alex@sjsu.edu");
         alex.setPassword("password123");
-        alex.setCreatedAt(LocalDateTime.now());
-        alex.setStatus("active");
+
 
         User sarah  = new User();
         sarah.setUsername("sarahj");
         sarah.setEmail("sarah@sjsu.edu");
         sarah.setPassword("password123");
-        sarah.setCreatedAt(LocalDateTime.now());
-        sarah.setStatus("active");
+
 
         User mike   = new User();
         mike.setUsername("mikechen");
         mike.setEmail("mike@sjsu.edu");
         mike.setPassword("password123");
-        mike.setCreatedAt(LocalDateTime.now());
-        mike.setStatus("active");
+
 
         User jess   = new User();
         jess.setUsername("jpark");
         jess.setEmail("jessica@sjsu.edu");
         jess.setPassword("password123");
-        jess.setCreatedAt(LocalDateTime.now());
-        jess.setStatus("active");
+
 
         User david  = new User();
         david.setUsername("dkim");
         david.setEmail("david@sjsu.edu");
         david.setPassword("password123");
-        david.setCreatedAt(LocalDateTime.now());
-        david.setStatus("active");
+
 
         User emma   = new User();
         emma.setUsername("ewilson");
         emma.setEmail("emma@sjsu.edu");
         emma.setPassword("password123");
-        emma.setCreatedAt(LocalDateTime.now());
-        emma.setStatus("active");
+
 
         userRepository.saveAll(List.of(alex, sarah, mike, jess, david, emma));
 
@@ -164,21 +158,18 @@ public class DataInitializer implements CommandLineRunner {
         c1.setUser(sarah);
         c1.setContent("Congrats Alex! Enjoy the break!");
         c1.setTimeStamp(LocalDateTime.now());
-        c1.setProfileImage(pSarah.getProfileImage());
 
         Comment c2 = new Comment();
         c2.setPost(post1);
         c2.setUser(mike);
         c2.setContent("Nice work, you earned it.");
         c2.setTimeStamp(LocalDateTime.now());
-        c2.setProfileImage(pMike.getProfileImage());
 
         Comment c3 = new Comment();
         c3.setPost(post2);
         c3.setUser(alex);
         c3.setContent("Library study sessions are the best.");
         c3.setTimeStamp(LocalDateTime.now());
-        c3.setProfileImage(pAlex.getProfileImage());
 
         commentRepository.saveAll(List.of(c1, c2, c3));
 

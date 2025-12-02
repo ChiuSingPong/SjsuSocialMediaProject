@@ -229,7 +229,7 @@
 <header class="topbar">
     <!-- left: logo -->
     <div class="d-flex align-items-center me-3">
-        <div class="topbar-logo">f</div>
+        <div class="topbar-logo">S</div>
     </div>
 
     <!-- middle: search -->
@@ -249,9 +249,8 @@
         <a class="nav-link" href="#"><i class="bi bi-chat-left-dots"></i></a>
     </nav>
 
-    <!-- right: bell + profile -->
+    <!-- right: profile -->
     <div class="d-flex align-items-center gap-3 ms-auto">
-        <i class="bi bi-bell"></i>
         <a href="/profile">
             <img class="avatar-sm"
                  th:src="${currentProfile != null and currentProfile.profileImage != null
@@ -302,81 +301,45 @@
                             <span class="edit-link"><i class="bi bi-pencil"></i>Edit</span>
                         </div>
 
-                        <form method="post" action="/settings">
-                            <!-- Profile Picture -->
+                        <form method="post" action="/settings" enctype="multipart/form-data">
+
+                        <!-- Profile Picture -->
                             <div class="row align-items-center mb-3">
                                 <div class="col-auto">
                                     <img class="profile-avatar-lg"
-                                         th:src="${(currentProfile != null and currentProfile.profileImage != null)
-                                                ? currentProfile.profileImage
-                                                : 'https://via.placeholder.com/120'}"
-                                         alt="Profile picture">
+                                         th:src="${currentProfile != null and currentProfile.profileImage != null
+                                                 ? currentProfile.profileImage
+                                                 : 'https://via.placeholder.com/120'}"
+                                         alt="Profile">
                                 </div>
+
                                 <div class="col">
                                     <div class="field-label">Profile Picture</div>
-                                    <input class="form-control read-input" type="text" name="profileImage"
-                                           th:src="${(currentProfile != null and currentProfile.profileImage != null)
-                                                    ? currentProfile.profileImage
-                                                    : 'https://via.placeholder.com/120'}">
+
+                                    <label class="btn btn-primary mt-2">
+                                        <i class="bi bi-upload"></i> Upload New Image
+                                        <input type="file" name="profileImageFile" accept="image/*" hidden>
+                                    </label>
+
+                                    <div id="fileName" class="text-muted small mt-1"></div>
+
                                 </div>
                             </div>
 
-                            <!-- Name row (we only have username; split is visual only) -->
-                            <div class="row g-3 mb-2">
-                                <div class="col-md-6">
-                                    <div class="field-label">First Name</div>
-                                    <input class="form-control read-input" type="text">
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="field-label">Last Name</div>
-                                    <input class="form-control read-input" type="text">
-                                </div>
-                            </div>
+                            <script>
+                                document.querySelector("input[name='profileImageFile']")
+                                    .addEventListener("change", function() {
+                                        document.getElementById("fileName").textContent =
+                                            this.files.length > 0 ? this.files[0].name : "";
+                                    });
+                            </script>
 
-                            <!-- Email / Phone -->
+                            <!-- Email-->
                             <div class="row g-3 mb-2">
                                 <div class="col-md-6">
                                     <div class="field-label">Email</div>
                                     <input class="form-control read-input" type="email" name="email"
                                            th:value="${currentUser.email}">
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="field-label">Phone</div>
-                                    <input class="form-control read-input" type="text">
-                                </div>
-                            </div>
-
-                            <!-- Birthday / Location -->
-                            <div class="row g-3 mb-2">
-                                <div class="col-md-6">
-                                    <div class="field-label">Birthday</div>
-                                    <input class="form-control read-input" type="text"
-                                           placeholder="MM/DD/YYYY">
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="field-label">Location</div>
-                                    <input class="form-control read-input" type="text">
-                                </div>
-                            </div>
-
-                            <div class="section-divider"></div>
-
-                            <!-- Education -->
-                            <div class="section-title-small">Education</div>
-                            <div class="row g-3 mb-2">
-                                <div class="col-12">
-                                    <div class="field-label">University</div>
-                                    <input class="form-control read-input" type="text">
-                                </div>
-                            </div>
-                            <div class="row g-3 mb-3">
-                                <div class="col-md-6">
-                                    <div class="field-label">Major</div>
-                                    <input class="form-control read-input" type="text">
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="field-label">Graduation Year</div>
-                                    <input class="form-control read-input" type="text">
                                 </div>
                             </div>
 
@@ -385,10 +348,21 @@
 
                             <div class="row g-3 mb-2">
                                 <div class="col-md-6">
-                                    <div class="field-label">Username (for login)</div>
+                                    <div class="field-label">Username</div>
                                     <input class="form-control read-input" type="text"
                                            name="username"
                                            th:value="${currentUser.username}">
+                                </div>
+                                <div class="mb-3">
+                                    <div class="field-label">Password</div>
+                                    <input class="form-control read-input"
+                                           type="text"
+                                           name="password"
+                                           th:value="${password}"
+                                           placeholder="Enter new password">
+                                    <div class="form-text">
+                                        Leave blank to keep the current password.
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="field-label">Short Bio</div>
@@ -403,7 +377,23 @@
                                     Save changes
                                 </button>
                             </div>
+                            <div class="mt-4 text-end">
+                                <a href="/logout" class="btn btn-danger">
+                                    <i class="bi bi-box-arrow-right"></i> Log Out
+                                </a>
+                            </div>
+
                         </form>
+
+                        <script>
+                            const fileInput = document.querySelector("input[name='profileImageFile']");
+                            if (fileInput) {
+                                fileInput.addEventListener("change", function () {
+                                    const el = document.getElementById("fileName");
+                                    if (el) el.textContent = this.files.length > 0 ? this.files[0].name : "";
+                                });
+                            }
+                        </script>
                     </div>
 
                 </div>

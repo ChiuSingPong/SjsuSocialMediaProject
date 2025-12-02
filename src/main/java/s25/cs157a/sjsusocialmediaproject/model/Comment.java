@@ -1,5 +1,6 @@
 package s25.cs157a.sjsusocialmediaproject.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -21,11 +22,13 @@ public class Comment {
     // Posts and comments: many-to-one
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "postID", nullable = false)
+    @JsonIgnore
     private Post post;
 
     // Users and comments: many-to-one
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userID", nullable = false)
+    @JsonIgnore
     private User user;
 
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
@@ -34,7 +37,4 @@ public class Comment {
     @Column(name = "timeStamp")
     private LocalDateTime timeStamp;
 
-    // denormalized profile image (copied from profile at comment time)
-    @Column(name = "profileImage")
-    private String profileImage;
 }

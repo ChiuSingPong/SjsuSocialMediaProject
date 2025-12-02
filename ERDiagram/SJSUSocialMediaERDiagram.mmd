@@ -1,0 +1,59 @@
+erDiagram
+
+    USERS {
+        int user_id PK
+        string username
+        string email
+        string password_hash
+    }
+
+    PROFILES {
+        int user_id PK,FK
+        string full_name
+        string bio
+        string profile_image_url
+        datetime last_updated
+    }
+
+    POSTS {
+        int post_id PK
+        int user_id FK
+        string content
+        string media_url
+        datetime created_at
+        datetime updated_at
+    }
+
+    COMMENTS {
+        int comment_id PK
+        int post_id FK
+        int user_id FK
+        string content
+        datetime created_at
+    }
+
+    LIKES {
+        int user_id PK,FK
+        int post_id PK,FK
+        int liked_id
+        datetime created_at
+    }
+
+    FOLLOWS {
+        int follower_id PK,FK
+        int followed_id PK,FK
+        datetime created_at
+    }
+
+%% RELATIONSHIPS
+
+    USERS ||--|| PROFILES : "has 1"
+    USERS ||--o{ POSTS : "creates"
+    POSTS ||--o{ COMMENTS : "has comments"
+    USERS ||--o{ COMMENTS : "writes"
+
+    USERS ||--o{ LIKES : "likes"
+    POSTS ||--o{ LIKES : "liked by"
+
+    USERS ||--o{ FOLLOWS : "follows"
+    USERS ||--o{ FOLLOWS : "followed by"

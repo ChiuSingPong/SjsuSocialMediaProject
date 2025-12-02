@@ -133,7 +133,7 @@
         }
 
         .side-menu-icon.friends  { background-color: #8b5cf6; }
-        .side-menu-icon.groups   { background-color: #2563eb; }
+        /*.side-menu-icon.groups   { background-color: #2563eb; }*/
         .side-menu-icon.events   { background-color: #f59e0b; }
         .side-menu-icon.settings { background-color: #6b7280; }
 
@@ -186,7 +186,7 @@
 <header class="topbar">
     <!-- left: logo -->
     <div class="d-flex align-items-center me-3">
-        <div class="topbar-logo">f</div>
+        <div class="topbar-logo">S</div>
     </div>
 
     <!-- middle: search -->
@@ -206,9 +206,8 @@
         <a class="nav-link" href="#"><i class="bi bi-chat-left-dots"></i></a>
     </nav>
 
-    <!-- right: bell + profile -->
+    <!-- right: profile -->
     <div class="d-flex align-items-center gap-3 ms-auto">
-        <i class="bi bi-bell"></i>
         <a href="/profile">
             <img class="avatar-sm"
                  th:src="${currentProfile != null and currentProfile.profileImage != null
@@ -229,10 +228,10 @@
             <div class="card left-card mb-3 p-3">
                 <a href="/profile" class="text-decoration-none text-dark">
                     <div class="d-flex align-items-center mb-3">
-                        <img class="avatar-md me-3"
-                             src="https://via.placeholder.com/80x80.png?text=A"
-                             alt="Alex">
-
+                        <img class="avatar-sm"
+                             th:src="${currentProfile != null and currentProfile.profileImage != null
+                                     ? currentProfile.profileImage
+                                     : 'https://via.placeholder.com/80'}">
                         <div>
                             <div class="fw-semibold"
                                  th:text="${currentUser.username}">
@@ -248,12 +247,6 @@
                         <i class="bi bi-people-fill"></i>
                     </span>
                     <span>Friends</span>
-                </div>
-                <div class="side-menu-item">
-                    <span class="side-menu-icon groups">
-                        <i class="bi bi-people"></i>
-                    </span>
-                    <span>Groups</span>
                 </div>
                 <div class="side-menu-item">
                     <span class="side-menu-icon events">
@@ -278,11 +271,12 @@
             <div class="card composer-card mb-3">
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-3">
-                        <img class="avatar-md me-2"
-                             src="https://via.placeholder.com/80x80.png?text=A"
-                             alt="Alex">
+                        <img class="avatar-sm"
+                             th:src="${currentProfile != null and currentProfile.profileImage != null
+                         ? currentProfile.profileImage
+                         : 'https://via.placeholder.com/80'}">
                         <div class="composer-input flex-grow-1"
-                             th:text="|What's on your mind, ${currentUser.username}?|">
+                             th:text="|What is on your mind, ${currentUser.username}?|">
                             What's on your mind, Alex?
                         </div>
 
@@ -305,8 +299,13 @@
                     <div class="d-flex justify-content-between">
                         <div class="d-flex">
                             <img class="avatar-md me-2"
-                                 src="https://via.placeholder.com/80x80.png?text=U"
+                                 th:src="${post.user != null
+                                          && post.user.profile != null
+                                          && post.user.profile.profileImage != null
+                                          ? post.user.profile.profileImage
+                                          : 'https://via.placeholder.com/80x80.png?text=U'}"
                                  alt="author">
+
                             <div>
                                 <div class="fw-semibold"
                                      th:text="${post.user.username}">
@@ -361,11 +360,14 @@
                 </div>
 
                 <div th:each="contact : ${contacts}" class="contact-row">
-                    <img class="avatar-sm"
-                         src="https://via.placeholder.com/80x80.png?text=C"
+                    <img class="avatar-sm me-2"
+                         th:src="${
+            contactImages[contact.id] != null
+            ? contactImages[contact.id]
+            : 'https://via.placeholder.com/40x40.png?text=C'
+         }"
                          alt="contact avatar">
                     <span th:text="${contact.username}">Contact Name</span>
-                    <span class="online-dot ms-auto"></span>
                 </div>
             </div>
         </div>

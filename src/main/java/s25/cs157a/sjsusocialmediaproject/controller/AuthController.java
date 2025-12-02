@@ -85,8 +85,6 @@ public class AuthController {
         newUser.setUsername(fullname);
         newUser.setEmail(email);
         newUser.setPassword(password); // in real projects, hash this!
-        newUser.setCreatedAt(LocalDateTime.now());
-        newUser.setStatus("active");
 
         // THIS is the part that actually saves the user:
         userRepository.save(newUser);

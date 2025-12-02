@@ -1,5 +1,6 @@
 package s25.cs157a.sjsusocialmediaproject.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class Like {
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("postId")
     @JoinColumn(name = "postID")
+    @JsonIgnore
     private Post post;
 
     // likedID from your schema: the owner of the post (optional but included)

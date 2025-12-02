@@ -15,6 +15,7 @@ import s25.cs157a.sjsusocialmediaproject.repository.PostRepository;
 import s25.cs157a.sjsusocialmediaproject.repository.ProfileRepository;
 import s25.cs157a.sjsusocialmediaproject.repository.UserRepository;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -108,5 +109,6 @@ public class ProfileController {
 
         return "redirect:/profile";
     }
+
 }
 

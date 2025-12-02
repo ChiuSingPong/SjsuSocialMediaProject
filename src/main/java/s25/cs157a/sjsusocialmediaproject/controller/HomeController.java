@@ -13,7 +13,9 @@ import s25.cs157a.sjsusocialmediaproject.repository.PostRepository;
 import s25.cs157a.sjsusocialmediaproject.repository.ProfileRepository;
 import s25.cs157a.sjsusocialmediaproject.repository.UserRepository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -70,11 +72,18 @@ public class HomeController {
                 ? java.util.Collections.emptyList()
                 : postRepository.findByUserInOrderByTimeStampDesc(visibleUsers);
 
+        // map contact.id -> profileImage URL (may be null)
+        Map<Integer, String> contactImages = new HashMap<>();
+        for (User c : contacts) {
+            profileRepository.findById(c.getId())
+                    .ifPresent(p -> contactImages.put(c.getId(), p.getProfileImage()));
+        }
 
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("currentProfile", profile);
         model.addAttribute("posts", posts);
         model.addAttribute("contacts", contacts);
+        model.addAttribute("contactImages", contactImages);
 
         return "home";
     }
