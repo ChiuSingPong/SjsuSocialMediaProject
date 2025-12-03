@@ -181,6 +181,75 @@
             width: 100%;
         }
 
+        /* Comment styles */
+        .comments-section {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 10px;
+        }
+
+        .comment-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .comment-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .comment-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .comment-bubble {
+            background-color: #e4e6eb;
+            border-radius: 18px;
+            padding: 8px 12px;
+            flex: 1;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .comment-text {
+            font-size: 0.9rem;
+        }
+
+        .comment-time {
+            font-size: 0.75rem;
+            color: #65676b;
+            margin-left: 12px;
+            margin-top: 2px;
+        }
+
+        .comment-input-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .comment-input {
+            flex: 1;
+            border: none;
+            background-color: #f0f2f5;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+
+        .comment-input:focus {
+            outline: none;
+            background-color: #fff;
+            box-shadow: 0 0 0 2px rgba(0, 85, 162, 0.2);
+        }
+
         @media (max-width: 992px) {
             .left-col, .right-col {
                 display: none;
@@ -399,9 +468,70 @@
                             </button>
                         </form>
 
-                        <button class="btn btn-link btn-sm text-decoration-none text-muted">
+                        <!-- Comment button (scrolls to comment input) -->
+                        <button class="btn btn-link btn-sm text-decoration-none text-muted"
+                                type="button"
+                                onclick="this.closest('.card-body').querySelector('.comment-input').focus()">
                             <i class="bi bi-chat"></i> Comment
                         </button>
+                    </div>
+
+                    <!-- Comments Section (Always Visible) -->
+                    <div class="mt-2">
+                        <div class="comments-section">
+                            <!-- Existing comments -->
+                            <div th:each="comment : ${post.comments}" class="comment-item">
+                                <img class="comment-avatar"
+                                     th:src="${comment.user.profile != null and comment.user.profile.profileImage != null
+                                              ? comment.user.profile.profileImage
+                                              : 'https://via.placeholder.com/32x32.png?text=U'}"
+                                     alt="commenter">
+                                <div class="flex-grow-1">
+                                    <div class="comment-bubble">
+                                        <div class="comment-author" th:text="${comment.user.username}">Username</div>
+                                        <div class="comment-text" th:text="${comment.content}">Comment text</div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <span class="comment-time"
+                                              th:text="${#temporals.format(comment.timeStamp, 'MMM d, h:mm a')}">
+                                            Dec 1, 2:30 PM
+                                        </span>
+                                        <!-- Delete button for comment owner or post owner -->
+                                        <form th:if="${comment.user.id == currentUser.id or post.user.id == currentUser.id}"
+                                              method="post" action="/comment/delete" class="d-inline ms-2">
+                                            <input type="hidden" name="commentId" th:value="${comment.id}">
+                                            <button type="submit"
+                                                    class="btn btn-link btn-sm text-decoration-none text-muted p-0"
+                                                    style="font-size: 0.75rem;">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- No comments message -->
+                            <div th:if="${#lists.isEmpty(post.comments)}" class="text-muted small text-center py-2">
+                                No comments yet. Be the first to comment!
+                            </div>
+
+                            <!-- Add comment form -->
+                            <form method="post" action="/comment" class="comment-input-row">
+                                <input type="hidden" name="postId" th:value="${post.id}">
+                                <img class="comment-avatar"
+                                     th:src="${currentProfile != null and currentProfile.profileImage != null
+                                              ? currentProfile.profileImage
+                                              : 'https://via.placeholder.com/32'}">
+                                <input type="text"
+                                       name="content"
+                                       class="comment-input"
+                                       placeholder="Write a comment..."
+                                       required>
+                                <button type="submit" class="btn btn-primary btn-sm" style="border-radius: 20px;">
+                                    <i class="bi bi-send"></i>
+                                </button>
+                            </form>
+                        </div>
                     </div>
 
                 </div>
