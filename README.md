@@ -6,7 +6,7 @@ Required Software:
 Before getting started, make sure the following software is installed:
 
 1.  Java JDK 17 or higher
-    Download: https://adoptium.net/
+    Download: https://www.oracle.com/java/technologies/downloads/
     To verify installation, open Command Prompt or Terminal and run:
     java -version
 
