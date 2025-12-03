@@ -1,6 +1,7 @@
 package s25.cs157a.sjsusocialmediaproject.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 import s25.cs157a.sjsusocialmediaproject.model.Like;
 import s25.cs157a.sjsusocialmediaproject.model.LikeId;
 import s25.cs157a.sjsusocialmediaproject.model.Post;
@@ -15,4 +16,7 @@ public interface LikeRepository extends JpaRepository<Like, LikeId> {
     boolean existsByUserAndPost(User user, Post post);
 
     List<Like> findByUser(User user);
+
+    @Transactional
+    void deleteByUserAndPost(User user, Post post);
 }

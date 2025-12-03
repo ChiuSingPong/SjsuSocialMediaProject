@@ -377,6 +377,33 @@
                         </span>
                     </div>
 
+                    <hr class="my-2">
+
+                    <!-- Like/Unlike and Comment buttons -->
+                    <div class="d-flex justify-content-around">
+                        <!-- Unlike button (shown if user has liked this post) -->
+                        <form th:if="${likedPostIds != null and likedPostIds.contains(post.id)}"
+                              method="post" action="/unlike" class="d-inline">
+                            <input type="hidden" name="postId" th:value="${post.id}">
+                            <button type="submit" class="btn btn-link btn-sm text-decoration-none text-primary">
+                                <i class="bi bi-hand-thumbs-up-fill"></i> Liked
+                            </button>
+                        </form>
+
+                        <!-- Like button (shown if user has NOT liked this post) -->
+                        <form th:if="${likedPostIds == null or !likedPostIds.contains(post.id)}"
+                              method="post" action="/like" class="d-inline">
+                            <input type="hidden" name="postId" th:value="${post.id}">
+                            <button type="submit" class="btn btn-link btn-sm text-decoration-none text-muted">
+                                <i class="bi bi-hand-thumbs-up"></i> Like
+                            </button>
+                        </form>
+
+                        <button class="btn btn-link btn-sm text-decoration-none text-muted">
+                            <i class="bi bi-chat"></i> Comment
+                        </button>
+                    </div>
+
                 </div>
 
                 <!-- Only show image if mediaUrl is not null -->

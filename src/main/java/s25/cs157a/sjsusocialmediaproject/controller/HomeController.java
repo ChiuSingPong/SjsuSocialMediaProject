@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDateTime;
 import s25.cs157a.sjsusocialmediaproject.model.Follow;
+import s25.cs157a.sjsusocialmediaproject.model.Like;
 import s25.cs157a.sjsusocialmediaproject.model.Post;
 import s25.cs157a.sjsusocialmediaproject.model.Profile;
 import s25.cs157a.sjsusocialmediaproject.model.User;
 import s25.cs157a.sjsusocialmediaproject.repository.FollowRepository;
+import s25.cs157a.sjsusocialmediaproject.repository.LikeRepository;
 import s25.cs157a.sjsusocialmediaproject.repository.PostRepository;
 import s25.cs157a.sjsusocialmediaproject.repository.ProfileRepository;
 import s25.cs157a.sjsusocialmediaproject.repository.UserRepository;
@@ -20,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 public class HomeController {
@@ -28,15 +32,18 @@ public class HomeController {
     private final PostRepository postRepository;
     private final FollowRepository followRepository;
     private final ProfileRepository profileRepository;
+    private final LikeRepository likeRepository;
 
     public HomeController(UserRepository userRepository,
                           PostRepository postRepository,
                           FollowRepository followRepository,
-                          ProfileRepository profileRepository) {
+                          ProfileRepository profileRepository,
+                          LikeRepository likeRepository) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
         this.followRepository = followRepository;
         this.profileRepository = profileRepository;
+        this.likeRepository = likeRepository;
     }
 
     @GetMapping("/home")
@@ -82,11 +89,18 @@ public class HomeController {
                     .ifPresent(p -> contactImages.put(c.getId(), p.getProfileImage()));
         }
 
+        // Get set of post IDs that current user has liked
+        Set<Integer> likedPostIds = likeRepository.findByUser(currentUser)
+                .stream()
+                .map(like -> like.getPost().getId())
+                .collect(Collectors.toSet());
+
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("currentProfile", profile);
         model.addAttribute("posts", posts);
         model.addAttribute("contacts", contacts);
         model.addAttribute("contactImages", contactImages);
+        model.addAttribute("likedPostIds", likedPostIds);
 
         return "home";
     }
