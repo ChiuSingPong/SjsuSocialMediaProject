@@ -121,4 +121,34 @@ public class HomeController {
         // 5. Redirect back to home to see the new post
         return "redirect:/home";
     }
+
+    @PostMapping("/post/delete")
+    public String deletePost(@RequestParam("postId") Integer postId,
+                             HttpSession session) {
+
+        // 1. Check if user is logged in
+        Integer uid = (Integer) session.getAttribute("userID");
+        if (uid == null) {
+            return "redirect:/login";
+        }
+
+        // 2. Find the post in database (SELECT * FROM posts WHERE postID = ?)
+        Optional<Post> postOpt = postRepository.findById(postId);
+        if (postOpt.isEmpty()) {
+            return "redirect:/home"; // Post doesn't exist
+        }
+
+        Post post = postOpt.get();
+
+        // 3. Authorization: Only the post owner can delete their post
+        if (!post.getUser().getId().equals(uid)) {
+            return "redirect:/home"; // Not authorized
+        }
+
+        // 4. Delete from database (DELETE FROM posts WHERE postID = ?)
+        postRepository.delete(post);
+
+        // 5. Redirect back to home
+        return "redirect:/home";
+    }
 }
