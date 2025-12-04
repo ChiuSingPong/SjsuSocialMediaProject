@@ -63,7 +63,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public String signupSubmit(
-            @RequestParam String fullname,
+            @RequestParam String username,
             @RequestParam String email,
             @RequestParam String password,
             @RequestParam String confirmPassword,
@@ -81,7 +81,7 @@ public class AuthController {
         }
 
         User newUser = new User();
-        newUser.setUsername(fullname);
+        newUser.setUsername(username);
         newUser.setEmail(email);
         newUser.setPassword(password); // in real projects, hash this!
 

@@ -422,11 +422,6 @@
                        th:text="${post.content}">
                     </p>
 
-                    <!-- DEBUG: raw URL, keep this while testing -->
-                    <p class="text-muted small" th:if="${post.mediaUrl != null}">
-                        Media URL: <span th:text="${post.mediaUrl}"></span>
-                    </p>
-
                     <!-- MEDIA (image or video) -->
                     <div th:if="${post.mediaUrl != null}"
                          class="mb-2"
