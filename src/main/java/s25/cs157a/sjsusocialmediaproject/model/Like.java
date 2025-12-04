@@ -30,7 +30,7 @@ public class Like {
     @JsonIgnore
     private Post post;
 
-    // likedID from your schema: the owner of the post (optional but included)
+    // the owner of the post
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "likedID")
     private User likedUser;

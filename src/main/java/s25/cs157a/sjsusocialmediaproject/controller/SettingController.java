@@ -105,7 +105,7 @@ public class SettingController {
         // handle image upload
         if (profileImageFile != null && !profileImageFile.isEmpty()) {
             try {
-                // 🔹 make uploadDir absolute so Tomcat doesn't treat it as relative temp
+                // make uploadDir absolute so Tomcat doesn't treat it as relative temp
                 Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
 
                 if (!Files.exists(uploadPath)) {
@@ -122,9 +122,8 @@ public class SettingController {
 
                 Path filePath = uploadPath.resolve(fileName);
 
-                System.out.println("Saving file to: " + filePath); // debug
+                System.out.println("Saving file to: " + filePath);
 
-                // 🔹 use absolute path
                 profileImageFile.transferTo(filePath.toFile().getAbsoluteFile());
 
                 profile.setProfileImage("/uploads/" + fileName);
@@ -139,5 +138,4 @@ public class SettingController {
 
         return "redirect:/profile";
     }
-
 }

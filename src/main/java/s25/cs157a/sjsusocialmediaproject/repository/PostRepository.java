@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Integer> {
 
-    List<Post> findAllByOrderByTimeStampDesc();
-
     List<Post> findByUserOrderByTimeStampDesc(User user);
 
     List<Post> findByUserInOrderByTimeStampDesc(List<User> users);

@@ -11,8 +11,6 @@ import java.util.List;
 
 public interface LikeRepository extends JpaRepository<Like, LikeId> {
 
-    long countByPost(Post post);
-
     boolean existsByUserAndPost(User user, Post post);
 
     List<Like> findByUser(User user);

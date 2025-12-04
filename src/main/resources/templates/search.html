@@ -74,7 +74,7 @@
 </head>
 <body>
 
-<!-- TOPBAR (same as home, with active search) -->
+<!-- TOPBAR -->
 <header class="topbar">
     <div class="d-flex align-items-center me-3">
         <div class="topbar-logo">S</div>
@@ -126,8 +126,8 @@
                 <div class="small text-muted" th:text="${user.email}">user@sjsu.edu</div>
             </div>
 
-            <!-- ⭐ FOLLOW / UNFOLLOW BUTTONS ⭐ -->
-            <!-- Hide buttons only when the result is actually *you* -->
+            <!-- FOLLOW / UNFOLLOW BUTTONS -->
+            <!-- Hide buttons only when the result is current user -->
             <div class="ms-auto"
                  th:if="${user != null and currentUser != null and user.id != currentUser.id}">
 

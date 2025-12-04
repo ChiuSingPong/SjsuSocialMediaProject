@@ -27,7 +27,8 @@ public class DebugController {
         this.profileRepository = profileRepository;
         this.postRepository = postRepository;
     }
-
+    //use this link to see table
+    //http://localhost:8080/debug/users
     // SELECT * FROM USERS;
     @GetMapping("/users")
     public List<User> allUsers() {

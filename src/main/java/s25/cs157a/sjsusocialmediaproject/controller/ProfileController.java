@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import s25.cs157a.sjsusocialmediaproject.model.Follow;
-import s25.cs157a.sjsusocialmediaproject.model.Like;
 import s25.cs157a.sjsusocialmediaproject.model.Post;
 import s25.cs157a.sjsusocialmediaproject.model.Profile;
 import s25.cs157a.sjsusocialmediaproject.model.User;
@@ -17,7 +16,6 @@ import s25.cs157a.sjsusocialmediaproject.repository.PostRepository;
 import s25.cs157a.sjsusocialmediaproject.repository.ProfileRepository;
 import s25.cs157a.sjsusocialmediaproject.repository.UserRepository;
 
-import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -92,7 +90,7 @@ public class ProfileController {
         model.addAttribute("friends", friends);
         model.addAttribute("likedPostIds", likedPostIds);
 
-        return "profile"; // profile.html
+        return "profile";
     }
 
     /** Update the "intro"/bio section for the CURRENT logged in user */

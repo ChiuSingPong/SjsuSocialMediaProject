@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.time.LocalDateTime;
 import s25.cs157a.sjsusocialmediaproject.model.Follow;
-import s25.cs157a.sjsusocialmediaproject.model.Like;
 import s25.cs157a.sjsusocialmediaproject.model.Post;
 import s25.cs157a.sjsusocialmediaproject.model.Profile;
 import s25.cs157a.sjsusocialmediaproject.model.User;
@@ -17,6 +16,13 @@ import s25.cs157a.sjsusocialmediaproject.repository.LikeRepository;
 import s25.cs157a.sjsusocialmediaproject.repository.PostRepository;
 import s25.cs157a.sjsusocialmediaproject.repository.ProfileRepository;
 import s25.cs157a.sjsusocialmediaproject.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +39,10 @@ public class HomeController {
     private final FollowRepository followRepository;
     private final ProfileRepository profileRepository;
     private final LikeRepository likeRepository;
+
+    @Value("${file.upload-dir:uploads}")
+    private String uploadDir;
+
 
     public HomeController(UserRepository userRepository,
                           PostRepository postRepository,
@@ -62,7 +72,6 @@ public class HomeController {
 
         User currentUser = userOpt.get();
 
-        // ✅ use the injected bean, not ProfileRepository.class
         Profile profile = profileRepository.findById(currentUser.getId())
                 .orElse(null);
 
@@ -72,12 +81,12 @@ public class HomeController {
                 .map(Follow::getFriend)
                 .toList();
 
-// build list of users whose posts we want to see: current user + friends
+        // build list of users whose posts we want to see: current user + friends
         List<User> visibleUsers = new java.util.ArrayList<>();
         visibleUsers.add(currentUser);
         visibleUsers.addAll(contacts);
 
-// only posts from current user + friends
+        // only posts from current user + friends
         List<Post> posts = visibleUsers.isEmpty()
                 ? java.util.Collections.emptyList()
                 : postRepository.findByUserInOrderByTimeStampDesc(visibleUsers);
@@ -107,32 +116,58 @@ public class HomeController {
 
     @PostMapping("/post")
     public String createPost(@RequestParam("content") String content,
+                             @RequestParam(value = "mediaFile", required = false) MultipartFile mediaFile,
                              HttpSession session) {
 
-        // 1. Check if user is logged in
+        // 1. Check login
         Integer uid = (Integer) session.getAttribute("userID");
         if (uid == null) {
             return "redirect:/login";
         }
 
-        // 2. Get the current user from database (SELECT * FROM users WHERE userID = ?)
+        // 2. Get user
         Optional<User> userOpt = userRepository.findById(uid);
         if (userOpt.isEmpty()) {
+            session.invalidate();
             return "redirect:/login";
         }
-
         User currentUser = userOpt.get();
 
-        // 3. Create new Post object
-        Post newPost = new Post();
-        newPost.setUser(currentUser);          
-        newPost.setContent(content);           
-        newPost.setTimeStamp(LocalDateTime.now()); 
+        // 3. Optional media upload
+        String mediaUrl = null;
+        if (mediaFile != null && !mediaFile.isEmpty()) {
+            try {
+                Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
+                Files.createDirectories(uploadPath);
 
-        // 4. Save to database (INSERT INTO posts VALUES (...))
+                String originalFilename = mediaFile.getOriginalFilename();
+                String ext = "";
+                if (originalFilename != null && originalFilename.contains(".")) {
+                    ext = originalFilename.substring(originalFilename.lastIndexOf("."));
+                }
+
+                String fileName = "post_" + currentUser.getId() + "_" + System.currentTimeMillis() + ext;
+                Path filePath = uploadPath.resolve(fileName);
+
+                // save file
+                mediaFile.transferTo(filePath.toFile());
+
+                mediaUrl = "/uploads/" + fileName;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // 4. Save post
+        Post newPost = new Post();
+        newPost.setUser(currentUser);
+        newPost.setContent(content);
+        newPost.setTimeStamp(LocalDateTime.now());
+        newPost.setMediaUrl(mediaUrl);
+
         postRepository.save(newPost);
 
-        // 5. Redirect back to home to see the new post
         return "redirect:/home";
     }
 

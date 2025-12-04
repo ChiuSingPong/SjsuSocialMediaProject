@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import s25.cs157a.sjsusocialmediaproject.model.Follow;
 import s25.cs157a.sjsusocialmediaproject.model.Post;
 import s25.cs157a.sjsusocialmediaproject.model.Profile;
 import s25.cs157a.sjsusocialmediaproject.model.User;

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import s25.cs157a.sjsusocialmediaproject.model.User;
 import s25.cs157a.sjsusocialmediaproject.repository.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Controller
@@ -86,10 +85,10 @@ public class AuthController {
         newUser.setEmail(email);
         newUser.setPassword(password); // in real projects, hash this!
 
-        // THIS is the part that actually saves the user:
+        // saves the user:
         userRepository.save(newUser);
 
-        // Do NOT auto-login after signup → send to login page
+        // go to login
         return "redirect:/login";
     }
 
