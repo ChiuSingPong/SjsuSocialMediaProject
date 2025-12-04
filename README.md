@@ -2,6 +2,16 @@ SJSU Social Media Project
 
 This project is a simple social media web application built with Spring Boot and Java for CS 157A: Introduction to Database Management.
 
+## To run the application.
+
+1.  Go to project folder, where mvnw.cmd is located
+   
+2.  Enter into terminal and run:
+    .\mvnw.cmd spring-boot:run
+
+3.  Go to: http://localhost:8080
+
+## To enter development. 
 Required Software:
 Before getting started, make sure the following software is installed:
 
