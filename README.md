@@ -16,13 +16,15 @@ This project is a simple social media web application built with Spring Boot and
 
 2.  Go to: http://localhost:8080/h2-console
 
-3.  For JDBC URL, enter: jdbc:h2:file:./data/sjsu-social
-    For User Name, enter: sa
-    For Password, leave empty
+3.  In JDBC URL, enter: jdbc:h2:file:./data/sjsu-social
 
-4.  Click "Connect"
+4.  In User Name, enter: sa
+   
+5.  In Password, leave empty
 
-5.  To view all tables, run:
+6.  Click "Connect"
+
+7.  To view all tables, run:
     SELECT * FROM USERS;
     SELECT * FROM POSTS;
     SELECT * FROM COMMENTS;
