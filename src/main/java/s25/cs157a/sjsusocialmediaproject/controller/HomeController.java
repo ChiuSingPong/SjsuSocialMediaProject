@@ -166,6 +166,8 @@ public class HomeController {
         newPost.setTimeStamp(LocalDateTime.now());
         newPost.setMediaUrl(mediaUrl);
 
+        // INSERT INTO posts (userID, content, mediaUrl, timeStamp)
+        // VALUES (?, ?, NULL, ?);
         postRepository.save(newPost);
 
         return "redirect:/home";

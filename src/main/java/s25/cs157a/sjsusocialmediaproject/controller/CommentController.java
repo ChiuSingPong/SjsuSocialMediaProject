@@ -89,6 +89,8 @@ public class CommentController {
         boolean isPostOwner = comment.getPost().getUser().getId().equals(uid);
 
         if (isCommentOwner || isPostOwner) {
+            // DELETE FROM comments
+            // WHERE commentID = ?;
             commentRepository.delete(comment);
         }
 

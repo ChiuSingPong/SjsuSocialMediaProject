@@ -8,26 +8,26 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users") // TABLE USERS
 @Getter
 @Setter
 @NoArgsConstructor
 public class User {
 
-    @Id
+    @Id // PRIMARY KEY
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userID")
+    @Column(name = "userID") // userID INT auto-increment
     private Integer id;
 
     @Column(name = "userName", nullable = false, unique = true)
-    private String username;
+    private String username; // userName VARCHAR(225) NOT NULL UNIQUE
 
     @Column(nullable = false, unique = true)
-    private String email;
+    private String email; // email VARCHAR(255) NOT NULL UNIQUE
 
     @Column(name = "password", nullable = false)
     @JsonIgnore
-    private String password;
+    private String password; // password VARCHAR(255) NOT NULL
 
     // Relationships
 

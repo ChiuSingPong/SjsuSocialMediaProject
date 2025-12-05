@@ -32,6 +32,13 @@ public class AuthController {
             HttpSession session,
             Model model
     ) {
+        // SELECT
+        //     u.userID,
+        //     u.userName,
+        //     u.email,
+        //     u.password
+        // FROM users u
+        // WHERE u.email = ?;
         Optional<User> userOpt = userRepository.findByEmail(email);
 
         if (userOpt.isEmpty()) {
@@ -77,6 +84,11 @@ public class AuthController {
 
         if (userRepository.findByEmail(email).isPresent()) {
             model.addAttribute("error", "Email already registered.");
+            return "signup";
+        }
+
+        if (userRepository.findByUsername(username).isPresent()) {
+            model.addAttribute("error", "Username is already taken.");
             return "signup";
         }
 

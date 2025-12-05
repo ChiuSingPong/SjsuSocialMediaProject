@@ -66,7 +66,8 @@ public class SettingController {
                                  @RequestParam(required = false) String password,
                                  @RequestParam(name = "profileImageFile", required = false)
                                  MultipartFile profileImageFile,
-                                 HttpSession session) {
+                                 HttpSession session,
+                                 Model model) {
 
         Integer uid = (Integer) session.getAttribute("userID");
         if (uid == null) {
@@ -81,7 +82,40 @@ public class SettingController {
 
         User currentUser = userOpt.get();
 
-        // update user fields
+        // Load or create profile once and reuse
+        Profile profile = profileRepository.findById(currentUser.getId())
+                .orElse(new Profile());
+        profile.setUser(currentUser);
+
+        // ---------- VALIDATION: duplicate email ----------
+        if (email != null && !email.isBlank() && !email.equals(currentUser.getEmail())) {
+            var existingEmailUser = userRepository.findByEmail(email);
+            if (existingEmailUser.isPresent()
+                    && !existingEmailUser.get().getId().equals(currentUser.getId())) {
+
+                model.addAttribute("currentUser", currentUser);
+                model.addAttribute("currentProfile", profile);
+                model.addAttribute("error", "Email is already in use.");
+
+                return "settings";
+            }
+        }
+
+        // ---------- VALIDATION: duplicate username ----------
+        if (username != null && !username.isBlank() && !username.equals(currentUser.getUsername())) {
+            var existingUsernameUser = userRepository.findByUsername(username);
+            if (existingUsernameUser.isPresent()
+                    && !existingUsernameUser.get().getId().equals(currentUser.getId())) {
+
+                model.addAttribute("currentUser", currentUser);
+                model.addAttribute("currentProfile", profile);
+                model.addAttribute("error", "Username is already taken.");
+
+                return "settings";
+            }
+        }
+
+        // ---------- UPDATE USER FIELDS AFTER PASSING VALIDATION ----------
         if (email != null && !email.isBlank()) {
             currentUser.setEmail(email);
         }
@@ -89,15 +123,12 @@ public class SettingController {
             currentUser.setUsername(username);
         }
         if (password != null && !password.isBlank()) {
-            currentUser.setPassword(password); // for class project; in real app, encode it
+            // For class project; in real app you would hash this
+            currentUser.setPassword(password);
         }
         userRepository.save(currentUser);
 
-        // load or create profile
-        Profile profile = profileRepository.findById(currentUser.getId())
-                .orElse(new Profile());
-        profile.setUser(currentUser);
-
+        // ---------- PROFILE FIELDS ----------
         if (bio != null) {
             profile.setBio(bio);
         }
@@ -105,27 +136,22 @@ public class SettingController {
         // handle image upload
         if (profileImageFile != null && !profileImageFile.isEmpty()) {
             try {
-                // make uploadDir absolute so Tomcat doesn't treat it as relative temp
                 Path uploadPath = Paths.get(uploadDir).toAbsolutePath().normalize();
 
                 if (!Files.exists(uploadPath)) {
                     Files.createDirectories(uploadPath);
                 }
 
-                String ext = "";
-                String originalName = profileImageFile.getOriginalFilename();
-                if (originalName != null && originalName.contains(".")) {
-                    ext = originalName.substring(originalName.lastIndexOf("."));
+                String originalFilename = profileImageFile.getOriginalFilename();
+                String extension = "";
+                if (originalFilename != null && originalFilename.contains(".")) {
+                    extension = originalFilename.substring(originalFilename.lastIndexOf("."));
                 }
 
-                String fileName = "profile_" + currentUser.getId() + "_" + UUID.randomUUID() + ext;
-
+                String fileName = "profile_" + currentUser.getId() + "_" + System.currentTimeMillis() + extension;
                 Path filePath = uploadPath.resolve(fileName);
 
-                System.out.println("Saving file to: " + filePath);
-
-                profileImageFile.transferTo(filePath.toFile().getAbsoluteFile());
-
+                profileImageFile.transferTo(filePath.toFile());
                 profile.setProfileImage("/uploads/" + fileName);
 
             } catch (IOException e) {
@@ -138,4 +164,5 @@ public class SettingController {
 
         return "redirect:/profile";
     }
+
 }

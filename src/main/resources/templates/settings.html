@@ -252,6 +252,7 @@
     <!-- Account Settings header card -->
     <div class="settings-header-card">
         <div class="settings-header-title">Account Settings</div>
+        <div th:if="${error}" class="alert alert-danger mb-3" th:text="${error}"></div>
         <div class="settings-header-subtitle">
             Manage your account information and preferences.
         </div>
