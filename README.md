@@ -11,6 +11,28 @@ This project is a simple social media web application built with Spring Boot and
 
 3.  Go to: http://localhost:8080
 
+## Access the database console
+1.  Make sure the application is running
+
+2.  Go to: http://localhost:8080/h2-console
+
+3.  In JDBC URL, enter: jdbc:h2:file:./data/sjsu-social
+
+4.  In User Name, enter: sa
+   
+5.  In Password, leave empty
+
+6.  Click "Connect"
+
+7.  To view all tables, run:
+    SELECT * FROM USERS;
+    SELECT * FROM POSTS;
+    SELECT * FROM COMMENTS;
+    SELECT * FROM FOLLOWING;
+    SELECT * FROM LIKED;
+    SELECT * FROM PROFILES;
+
+
 ## To enter development. 
 Required Software:
 Before getting started, make sure the following software is installed:
